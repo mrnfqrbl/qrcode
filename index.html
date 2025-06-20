@@ -1,10 +1,54 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>我的网站</title>
+  <title>QR 码生成器</title>
+  <style>
+    /* 样式 */
+    .qr-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .qr-code {
+      margin: 10px;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
-  <h1>欢迎来到我的网站！</h1>
-  <p>这是一个使用 GitHub Pages 部署的网站。</p>
+  <h1>QR 码生成器</h1>
+
+  <textarea id="urlInput" rows="4" cols="50" placeholder="请输入 URL，使用 | 或换行分割"></textarea>
+  <button onclick="generateQRCodes()">生成 QR 码</button>
+
+  <div id="qrCodesContainer" class="qr-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <script>
+    function generateQRCodes() {
+      const urlInput = document.getElementById('urlInput').value;
+      const urls = urlInput.split(/[\n|]/).filter(url => url.trim() !== ""); // 分割 URL 并去除空字符串
+      const qrCodesContainer = document.getElementById('qrCodesContainer');
+      qrCodesContainer.innerHTML = ''; // 清空之前的 QR 码
+
+      urls.forEach((url, index) => {
+        const qrCodeDiv = document.createElement('div');
+        qrCodeDiv.classList.add('qr-code');
+
+        const qrCode = new QRCode(qrCodeDiv, {
+          text: url.trim(),
+          width: 128,
+          height: 128,
+          correctLevel : QRCode.CorrectLevel.L
+        });
+
+        const label = document.createElement('p');
+        label.textContent = `二维码 ${index + 1}`;
+
+        qrCodeDiv.appendChild(label);
+        qrCodesContainer.appendChild(qrCodeDiv);
+      });
+    }
+  </script>
 </body>
 </html>
