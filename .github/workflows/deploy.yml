@@ -1,0 +1,21 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main # 触发部署的分支
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./ # 你的网站文件所在的目录
+          destination_dir: / # 将文件部署到根目录
+          publish_branch: gh-pages # 部署到 gh-pages 分支
+          force_orphan: true # 强制创建孤儿分支
