@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>QR 码生成器</title>
+  <style>
+    /* 全局样式 */
+    body {
+      font-family: sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 20px;
+    }
+
+    /* 主容器样式 */
+    #mainContainer {
+      display: flex;
+      height: 90vh; /* 占据更多视口高度 */
+    }
+
+    /* 输入区域样式 */
+    #inputContainer {
+      width: 25%;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    textarea {
+      width: 90%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+      resize: vertical;
+      margin-bottom: 10px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #367c39;
+    }
+
+    /* QR 码显示区域样式 */
+    #qrCodesContainer {
+      width: 75%;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      overflow-y: auto;
+    }
+
+    .qr-code {
+      text-align: center;
+      padding: 10px;
+      border: 1px solid #eee;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+      transition: transform 0.2s;
+    }
+
+    .qr-code:hover {
+      transform: scale(1.05);
+    }
+
+    .qr-code p {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #777;
+    }
+
+    /* 响应式布局 */
+    @media (max-width: 600px) {
+      #mainContainer {
+        flex-direction: column;
+        height: auto;
+      }
+
+      #inputContainer {
+        width: 100%;
+        margin-bottom: 20px;
+      }
+
+      #qrCodesContainer {
+        width: 100%;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="mainContainer">
+    <div id="inputContainer">
+      <textarea id="urlInput" rows="4" cols="50" placeholder="请输入 URL，使用 | 或换行分割"></textarea>
+      <button onclick="generateQRCodes()">生成 QR 码</button>
+    </div>
+
+    <div id="qrCodesContainer"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <script>
+    function generateQRCodes() {
+      const urlInput = document.getElementById('urlInput').value;
+      const urls = urlInput.split(/[\n|]/).filter(url => url.trim() !== "");
+      const qrCodesContainer = document.getElementById('qrCodesContainer');
+      qrCodesContainer.innerHTML = '';
+
+      urls.forEach((url, index) => {
+        const qrCodeDiv = document.createElement('div');
+        qrCodeDiv.classList.add('qr-code');
+
+        const qrCode = new QRCode(qrCodeDiv, {
+          text: url.trim(),
+          width: 200,
+          height: 200,
+          correctLevel : QRCode.CorrectLevel.L
+        });
+
+        const label = document.createElement('p');
+        label.textContent = `二维码 ${index + 1}`;
+
+        qrCodeDiv.appendChild(label);
+        qrCodesContainer.appendChild(qrCodeDiv);
+      });
+    }
+  </script>
+</body>
+</html>
